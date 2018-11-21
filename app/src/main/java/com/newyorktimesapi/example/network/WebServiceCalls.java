@@ -22,17 +22,17 @@ public class WebServiceCalls {
 
     public class Data {
 
-        public void getDetails(final Context activity, final NetworkOperations nwCall) {
+        public void getDetails(final Context activity, String apikey , final NetworkOperations nwCall) {
             nwCall.onStart(activity, "Downloading... ");
 
-            rfInterface.getDetails().enqueue(new Callback<RmData>() {
+            rfInterface.getDetails(apikey).enqueue(new Callback<RmData>() {
                 @Override
                 public void onResponse(Call<RmData> call, Response<RmData> response) {
                     try {
                         nwCall.onComplete();
 
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("data", response.body().getResults());
+                        bundle.putSerializable("data", response.body());
 
                         nwCall.onSuccess(bundle);
 
