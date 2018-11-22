@@ -32,7 +32,7 @@ public class WebServiceCalls {
                         nwCall.onComplete();
 
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("data", response.body());
+                        bundle.putSerializable("data", response.body().getResults());
 
                         nwCall.onSuccess(bundle);
 

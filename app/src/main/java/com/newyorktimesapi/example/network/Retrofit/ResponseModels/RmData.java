@@ -3,8 +3,9 @@ package com.newyorktimesapi.example.network.Retrofit.ResponseModels;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
+import com.newyorktimesapi.example.model.Result;
 
 public class RmData implements Serializable{
 
