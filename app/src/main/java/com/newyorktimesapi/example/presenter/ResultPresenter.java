@@ -14,14 +14,14 @@ import java.util.Locale;
 
 public class ResultPresenter implements IResultPresenter {
 
-    private IResultView mainActivityView;
+    private IResultView iResultView;
     private ArrayList<Result> results;
 
     private String orderby = "Oldest";
     private ArrayList<String> sections = null;
 
-    public ResultPresenter(IResultView mainActivityView, ArrayList<Result> results) {
-        this.mainActivityView = mainActivityView;
+    public ResultPresenter(IResultView iResultView, ArrayList<Result> results) {
+        this.iResultView = iResultView;
         this.results = results;
 
         updateSections();
@@ -48,12 +48,12 @@ public class ResultPresenter implements IResultPresenter {
 
     @Override
     public void setSections(ArrayList<String> sections) {
-        mainActivityView.setSections(sections);
+        iResultView.setSections(sections);
     }
 
     @Override
     public void showAllResult(ArrayList<Result> results) {
-        mainActivityView.showAllResult(results);
+        iResultView.showAllResult(results);
     }
 
     @Override

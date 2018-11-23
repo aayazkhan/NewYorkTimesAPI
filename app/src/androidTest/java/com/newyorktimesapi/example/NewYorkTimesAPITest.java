@@ -35,10 +35,10 @@ public class NewYorkTimesAPITest {
     public void getResult() throws IOException {
 
         Call<RmData> rmDataCall = rfInterface.getDetails(MainActivity.apikey);
-        Response<RmData> movieResponse = rmDataCall.execute();
+        Response<RmData> rmDataResponse = rmDataCall.execute();
 
-        assertEquals(200, movieResponse.code());
-        assertEquals(true, movieResponse.isSuccessful());
+        assertEquals(200, rmDataResponse.code());
+        assertEquals(true, rmDataResponse.isSuccessful());
 
     }
 
