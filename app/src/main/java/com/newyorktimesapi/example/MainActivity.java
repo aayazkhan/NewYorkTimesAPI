@@ -3,7 +3,6 @@ package com.newyorktimesapi.example;
 import android.app.Dialog;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -44,8 +43,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    private RecyclerViewAdapter recyclerViewAdapter;
+    private WebServiceCalls.Data data;
 
+    private RecyclerViewAdapter recyclerViewAdapter;
     private MainActivityPresenter presenter;
 
     private Dialog filterDialog = null;
@@ -64,16 +64,18 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
 
-        WebServiceCalls.Data data = new WebServiceCalls(service).new Data();
+        data = new WebServiceCalls(service).new Data();
 
+        downloadDataAndShow();
+    }
+
+    private void downloadDataAndShow() {
         data.getDetails(MainActivity.this, "29c609617ba4444488768d34ba666018", new NetworkOperations(true) {
+
             @Override
             public void onSuccess(Bundle msg) {
-
                 ArrayList<Result> results = (ArrayList<Result>) msg.getSerializable("data");
-
                 presenter = new MainActivityPresenter(MainActivity.this, results);
-
             }
 
             @Override
@@ -81,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
                 PopMessage.makelongtoast(MainActivity.this, msg.getString("message"));
             }
         });
-
     }
 
     @Override
@@ -141,12 +142,11 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
             }
 
             final Spinner spinnerSortOrder = (Spinner) filterDialog.findViewById(R.id.spinnerSortOrder);
+
             Button btnSubmit = (Button) filterDialog.findViewById(R.id.btnSubmit);
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
-
                     String orderBy = spinnerSortOrder.getSelectedItem().toString();
 
                     presenter.updateFilter(orderBy, recyclerViewAdapter.getResults());
