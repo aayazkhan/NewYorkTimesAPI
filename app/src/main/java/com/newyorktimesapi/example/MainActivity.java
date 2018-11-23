@@ -18,21 +18,23 @@ import android.widget.Spinner;
 
 import com.newyorktimesapi.example.Utils.PopMessage;
 import com.newyorktimesapi.example.Utils.Utility;
-import com.newyorktimesapi.example.View.IMainActivityView;
+import com.newyorktimesapi.example.View.IResultView;
 import com.newyorktimesapi.example.adapter.RecyclerViewAdapter;
+import com.newyorktimesapi.example.ccontrol.MultipleSelectionSpinner;
 import com.newyorktimesapi.example.model.Result;
 import com.newyorktimesapi.example.network.NetworkOperations;
 import com.newyorktimesapi.example.network.WebServiceCalls;
-import com.newyorktimesapi.example.presenter.MainActivityPresenter;
+import com.newyorktimesapi.example.presenter.ResultPresenter;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements IMainActivityView {
+public class MainActivity extends AppCompatActivity implements IResultView {
 
-    public final String service = "http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/";
+    public static final String service = "http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/";
+    public static final String apikey = "29c609617ba4444488768d34ba666018";
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -46,9 +48,14 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
     private WebServiceCalls.Data data;
 
     private RecyclerViewAdapter recyclerViewAdapter;
-    private MainActivityPresenter presenter;
+    private ResultPresenter presenter;
+
+    private ArrayList<String> sections = null;
 
     private Dialog filterDialog = null;
+    private Spinner spinnerSortOrder = null;
+    private MultipleSelectionSpinner multipleSelectionSpinner = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +77,12 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
     }
 
     private void downloadDataAndShow() {
-        data.getDetails(MainActivity.this, "29c609617ba4444488768d34ba666018", new NetworkOperations(true) {
+        data.getDetails(MainActivity.this, apikey, new NetworkOperations(true) {
 
             @Override
             public void onSuccess(Bundle msg) {
                 ArrayList<Result> results = (ArrayList<Result>) msg.getSerializable("data");
-                presenter = new MainActivityPresenter(MainActivity.this, results);
+                presenter = new ResultPresenter(MainActivity.this, results);
             }
 
             @Override
@@ -83,6 +90,11 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
                 PopMessage.makelongtoast(MainActivity.this, msg.getString("message"));
             }
         });
+    }
+
+    @Override
+    public void setSections(ArrayList<String> sections) {
+        this.sections = sections;
     }
 
     @Override
@@ -139,17 +151,25 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
             //TODO
             if (filterDialog == null) {
                 filterDialog = Utility.createDialog(MainActivity.this, R.layout.dialog_filter, false);
+                spinnerSortOrder = (Spinner) filterDialog.findViewById(R.id.spinnerSortOrder);
+                multipleSelectionSpinner = (MultipleSelectionSpinner) filterDialog.findViewById(R.id.multiSelectSpinnerSection);
+                multipleSelectionSpinner.setItems(sections);
             }
 
-            final Spinner spinnerSortOrder = (Spinner) filterDialog.findViewById(R.id.spinnerSortOrder);
 
             Button btnSubmit = (Button) filterDialog.findViewById(R.id.btnSubmit);
+
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String orderBy = spinnerSortOrder.getSelectedItem().toString();
+                    ArrayList<String> sections = multipleSelectionSpinner.getSelectedItemsAsString();
 
-                    presenter.updateFilter(orderBy, recyclerViewAdapter.getResults());
+                    if (sections.size() == 0) {
+                        sections.addAll(MainActivity.this.sections);
+                    }
+
+                    presenter.updateFilter(orderBy, sections);
 
                     filterDialog.hide();
                 }
