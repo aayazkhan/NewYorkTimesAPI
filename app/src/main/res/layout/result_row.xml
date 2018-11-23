@@ -25,10 +25,20 @@
             android:src="@mipmap/arrow_right" />
 
         <TextView
+            android:id="@+id/textViewCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/imageViewArrow"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/imageViewArrow"
+            android:lines="1"
+            android:text="Views : 6" />
+
+        <TextView
             android:id="@+id/textTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/imageViewArrow"
+            android:layout_toLeftOf="@+id/textViewCount"
             android:layout_toRightOf="@+id/imageView"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"

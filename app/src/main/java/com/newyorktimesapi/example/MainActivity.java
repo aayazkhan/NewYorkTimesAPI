@@ -128,6 +128,11 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
                 }
             });
         }
+
+        if (item.getItemId() == R.id.textFilterList) {
+            //TODO
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

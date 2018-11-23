@@ -14,6 +14,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -46,9 +48,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Result result = results.get(position);
 
         holder.setTitle(result.getTitle());
-        holder.setAuther(result.getSource());
+        holder.setAuther(result.getByline());
         holder.setDate(result.getPublishedDate());
-
+        holder.setViewCount(result.getViews());
 
     }
 
@@ -63,7 +65,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         private ImageView imageView;
 
-        private TextView textTitle, textAuther, textDate;
+        private TextView textTitle, textAuther, textDate, textViewCount;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -73,7 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textTitle = (TextView) itemView.findViewById(R.id.textTitle);
             textAuther = (TextView) itemView.findViewById(R.id.textAuther);
             textDate = (TextView) itemView.findViewById(R.id.textDate);
-
+            textViewCount = (TextView) itemView.findViewById(R.id.textViewCount);
         }
 
         public View getItemView() {
@@ -104,6 +106,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public void setDate(String date) {
             textDate.setText(date);
+        }
+
+        public void setViewCount(Long count) {
+            textViewCount.setText("views : " + count);
         }
 
     }
