@@ -2,10 +2,15 @@
 package com.newyorktimesapi.example.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Result implements Serializable{
+public class Result implements Serializable {
 
     @SerializedName("asset_id")
     private Long mAssetId;
@@ -27,6 +32,8 @@ public class Result implements Serializable{
     private String mUrl;
     @SerializedName("views")
     private Long mViews;
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     public Long getAssetId() {
         return mAssetId;
@@ -108,4 +115,38 @@ public class Result implements Serializable{
         mViews = views;
     }
 
+
+    public static Comparator<Result> ResultNewestDateComparator = new Comparator<Result>() {
+
+        public int compare(Result r1, Result r2) {
+
+            Date r1Date = null, r2Date = null;
+            try {
+                r1Date = r1.simpleDateFormat.parse(r1.getPublishedDate());
+                r2Date = r2.simpleDateFormat.parse(r2.getPublishedDate());
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            return r2Date.compareTo(r1Date);
+        }
+    };
+
+    public static Comparator<Result> ResultOldestDateComparator = new Comparator<Result>() {
+
+        public int compare(Result r1, Result r2) {
+
+            Date r1Date = null, r2Date = null;
+
+            try {
+                r1Date = r1.simpleDateFormat.parse(r1.getPublishedDate());
+                r2Date = r2.simpleDateFormat.parse(r2.getPublishedDate());
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            return r1Date.compareTo(r2Date);
+
+        }
+    };
 }

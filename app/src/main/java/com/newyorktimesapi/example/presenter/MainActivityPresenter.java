@@ -4,6 +4,7 @@ import com.newyorktimesapi.example.View.IMainActivityView;
 import com.newyorktimesapi.example.model.Result;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 /**
@@ -15,10 +16,14 @@ public class MainActivityPresenter implements IMainActivityPresenter {
     private IMainActivityView mainActivityView;
     private ArrayList<Result> results;
 
+    private String orderby = "Oldest";
+
     public MainActivityPresenter(IMainActivityView mainActivityView, ArrayList<Result> results) {
         this.mainActivityView = mainActivityView;
         this.results = results;
 
+        Collections.sort(results, Result.ResultOldestDateComparator);
+        updateResultbySort(this.results);
         showAllResult(this.results);
     }
 
@@ -40,9 +45,24 @@ public class MainActivityPresenter implements IMainActivityPresenter {
                 }
             }
 
-            mainActivityView.showAllResult(tmpResult);
-
+            updateResultbySort(tmpResult);
+            showAllResult(tmpResult);
         }
-
     }
+
+    public void updateFilter(String orderby, ArrayList<Result> results) {
+        this.orderby = orderby;
+        updateResultbySort(results);
+        showAllResult(results);
+    }
+
+    private void updateResultbySort(ArrayList<Result> result) {
+        if (orderby.equalsIgnoreCase("Newest")) {
+            Collections.sort(results, Result.ResultNewestDateComparator);
+        } else if (orderby.equalsIgnoreCase("oldest")) {
+            Collections.sort(results, Result.ResultOldestDateComparator);
+        }
+    }
+
+
 }

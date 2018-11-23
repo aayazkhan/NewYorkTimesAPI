@@ -1,5 +1,6 @@
 package com.newyorktimesapi.example;
 
+import android.app.Dialog;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,7 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Spinner;
 
+import com.newyorktimesapi.example.Utils.PopMessage;
+import com.newyorktimesapi.example.Utils.Utility;
 import com.newyorktimesapi.example.View.IMainActivityView;
 import com.newyorktimesapi.example.adapter.RecyclerViewAdapter;
 import com.newyorktimesapi.example.model.Result;
@@ -43,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
 
     private MainActivityPresenter presenter;
 
+    private Dialog filterDialog = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
             @Override
             public void onSuccess(Bundle msg) {
 
-                //             System.out.println(msg);
-
                 ArrayList<Result> results = (ArrayList<Result>) msg.getSerializable("data");
 
                 presenter = new MainActivityPresenter(MainActivity.this, results);
@@ -73,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
 
             @Override
             public void onFailure(Bundle msg) {
-
+                PopMessage.makelongtoast(MainActivity.this, msg.getString("message"));
             }
         });
 
@@ -131,6 +136,26 @@ public class MainActivity extends AppCompatActivity implements IMainActivityView
 
         if (item.getItemId() == R.id.textFilterList) {
             //TODO
+            if (filterDialog == null) {
+                filterDialog = Utility.createDialog(MainActivity.this, R.layout.dialog_filter, false);
+            }
+
+            final Spinner spinnerSortOrder = (Spinner) filterDialog.findViewById(R.id.spinnerSortOrder);
+            Button btnSubmit = (Button) filterDialog.findViewById(R.id.btnSubmit);
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO
+
+                    String orderBy = spinnerSortOrder.getSelectedItem().toString();
+
+                    presenter.updateFilter(orderBy, recyclerViewAdapter.getResults());
+
+                    filterDialog.hide();
+                }
+            });
+
+            filterDialog.show();
         }
 
         return super.onOptionsItemSelected(item);

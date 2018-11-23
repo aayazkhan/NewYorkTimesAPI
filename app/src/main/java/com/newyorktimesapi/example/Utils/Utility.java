@@ -16,10 +16,6 @@ import com.newyorktimesapi.example.network.Retrofit.RFInterface;
 
 public class Utility {
 
-    public static View initRecyclerView(ViewGroup parent, int id) {
-        return LayoutInflater.from(parent.getContext()).inflate(id, parent, false);
-    }
-
     public static RFInterface getRetrofitInterface(String BASE_URL) {
         return RFClient.getClient(BASE_URL).create(RFInterface.class);
     }
