@@ -20,8 +20,14 @@ public class MainActivityTest {
     private MainActivity mainActivity = null;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception  {
         mainActivity = activityTestRule.getActivity();
+    }
+
+    @Test
+    public void testDrawerLayout() {
+        View view = mainActivity.findViewById(R.id.drawer_layout);
+        Assert.assertNotNull(view);
     }
 
     @Test
