@@ -12,4 +12,6 @@ public interface IMainActivityPresenter {
 
     void showAllResult(ArrayList<Result> results);
 
+    void filterOnSearch(String query);
+
 }

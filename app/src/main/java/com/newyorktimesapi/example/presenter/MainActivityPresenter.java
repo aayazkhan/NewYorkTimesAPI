@@ -28,6 +28,7 @@ public class MainActivityPresenter implements IMainActivityPresenter {
         mainActivityView.showAllResult(results);
     }
 
+    @Override
     public void filterOnSearch(String query) {
         if (query.equals("")) {
             showAllResult(this.results);
